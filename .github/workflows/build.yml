@@ -33,12 +33,13 @@ jobs:
 
       - name: Install LLVM
         run: |
-          cmake --install build --prefix llvm-m68k-nightly-$DATE
-          tar -czvf llvm-m68k-nightly-$DATE.tar.gz llvm-m68k-nightly-$DATE
+          cmake --install build --prefix llvm-m68k-nightly
+          tar -czvf llvm-m68k-nightly-$DATE.tar.gz llvm-m68k-nightly
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           name: llvm-m68k-nightly-$DATE
+          tag: llvm-m68k-nightly-$DATE
           files: llvm-m68k-nightly-$DATE.tar.gz
 
