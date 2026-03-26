@@ -39,7 +39,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: llvm-m68k-nightly-$DATE
-          tag_name: llvm-m68k-nightly-$DATE
-          files: llvm-m68k-nightly-$DATE.tar.gz
+          name: llvm-m68k-nightly-${{ env.DATE }}
+          tag_name: llvm-m68k-nightly-${{ env.DATE }}
+          files: llvm-m68k-nightly-${{ env.DATE }}.tar.gz
 
