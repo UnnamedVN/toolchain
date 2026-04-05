@@ -20,29 +20,23 @@ jobs:
         with:
           repository: llvm/llvm-project
 
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
       - name: Configure LLVM
-        run: |
-          cmake \
-            -G Ninja \
-            -S llvm \
-            -B build \
-            -D CMAKE_BUILD_TYPE="Release" \
-            -D LLVM_ENABLE_PROJECTS="clang" \
-            -D LLVM_ENABLE_RUNTIMES="compiler-rt" \
-            -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k"
+        run: ./x.sh configure
 
       - name: Build LLVM
-        run: cmake --build build -j $(nproc --all)
+        run: ./x.sh build
 
-      - name: Install LLVM
+      - name: Package LLVM
         run: |
-          cmake --install build --prefix llvm-m68k-nightly
-          tar -czvf llvm-m68k-nightly-$DATE.tar.gz llvm-m68k-nightly
+          tar -czvf llvm-m68k-nightly.tar.gz llvm-m68k-nightly
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           name: llvm-m68k-nightly-${{ env.DATE }}
           tag_name: llvm-m68k-nightly-${{ env.DATE }}
-          files: llvm-m68k-nightly-${{ env.DATE }}.tar.gz
+          files: llvm-m68k-nightly.tar.gz
 
