@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Download vlink
         run: |
-          wget https://phoenix.owl.de/tags/${{ inputs.version }}.tar.gz
+          wget http://phoenix.owl.de/tags/${{ inputs.version }}.tar.gz
           tar -xzf ${{ inputs.version }}.tar.gz
 
       - name: Build vlink
