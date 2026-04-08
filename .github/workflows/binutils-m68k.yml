@@ -1,0 +1,47 @@
+name: binutils-m68k build
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Binutils version
+        required: true
+        default: 2.46.0
+      release_tag:
+        description: Release tag
+        required: true
+        default: binutils-m68k-2.46.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Download binutils
+        run: |
+          wget https://ftp.gnu.org/gnu/binutils/binutils-${{ inputs.version }}.tar.gz
+          tar -xzf binutils-${{ inputs.version }}.tar.gz
+          mv binutils-${{ inputs.version }} binutils
+
+      - name: Build binutils
+        run: |
+          cd binutils
+          ./configure --prefix=out --target=m68k-elf
+          make -j $(nproc --all)
+
+      - name: Package binutils
+        run: |
+          cd binutils
+          make install
+          tar -C out -cf - . | zstd -c -T0 --ultra -20 -o binutils-m68k.tar.zst
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          files: binutils/binutils-m68k.tar.zst
